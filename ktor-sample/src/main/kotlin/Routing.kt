@@ -39,6 +39,12 @@ fun Application.configureRouting() {
                 return@get
             }
             
+            // Validate postcode length; postcodes must be between 5 and 7 characters long
+            if (postcode.length < 5 || postcode.length > 7) {
+                call.respond(HttpStatusCode.BadRequest, "Postcode must be between 5-7 characters")
+                return@get
+            }
+            
             try {
                 val restaurants = justEatService.getRestaurantsByPostcode(postcode)
                 if (restaurants.isEmpty()) {
