@@ -1,5 +1,7 @@
 package com.example
 
+import com.example.service.JustEatService
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -20,10 +22,35 @@ fun Application.configureRouting() {
             else ValidationResult.Valid
         }
     }
+    
+    val justEatService = JustEatService()
+    
     routing {
         get("/") {
             call.respondText("Hello World!")
         }
+        
+        // Just Eat API endpoint
+        get("/restaurants/{postcode}") {
+            val postcode = call.parameters["postcode"]
+            
+            if (postcode.isNullOrBlank()) {
+                call.respond(HttpStatusCode.BadRequest, "Postcode is required")
+                return@get
+            }
+            
+            try {
+                val restaurants = justEatService.getRestaurantsByPostcode(postcode)
+                if (restaurants.isEmpty()) {
+                    call.respond(HttpStatusCode.NotFound, "No restaurants found for postcode $postcode")
+                } else {
+                    call.respond(restaurants)
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Error fetching restaurant data: ${e.message}")
+            }
+        }
+        
         // Static plugin. Try to access `/static/index.html`
         staticResources("/static", "static")
     }
