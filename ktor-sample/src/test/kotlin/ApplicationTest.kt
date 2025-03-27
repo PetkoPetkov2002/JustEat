@@ -109,4 +109,20 @@ class ApplicationTest {
         assertEquals(HttpStatusCode.BadRequest, response.status,message = "Postcode must be between 5-7 characters")
     }
 
+    @Test
+    fun testNoRestaurantsReturned() = testApplication {
+        application {
+            configureRouting()
+            configureSerialization()
+            configureMonitoring()
+        }
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        val response = client.get("/restaurants/LLLLLL")
+        assertEquals(HttpStatusCode.NotFound, response.status,message = "No restaurants found for postcode LLLLLL")
+    }
+
 }
