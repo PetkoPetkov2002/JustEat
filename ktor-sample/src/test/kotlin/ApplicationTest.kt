@@ -130,4 +130,24 @@ class ApplicationTest {
         assertEquals(HttpStatusCode.NotFound, response.status)
         assertEquals("No restaurants found for postcode LLLLLL", response.bodyAsText())
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["LL 57 4   BB"])
+    fun testBadPostcodeFormat(postcode: String)= testApplication {
+        application {
+            configureRouting()
+            configureSerialization()
+            configureMonitoring()
+        }
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        val cleanedPostcode = postcode.replace("\\s".toRegex(), "")
+        val response2 = client.get("/restaurants/$cleanedPostcode")
+        val response = client.get("/restaurants/$postcode")
+        assertTrue(response2.bodyAsText() == response.bodyAsText())
+        println(response.bodyAsText())
+    }
 }
