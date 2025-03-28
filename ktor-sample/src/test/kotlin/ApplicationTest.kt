@@ -93,7 +93,7 @@ class ApplicationTest {
         }
         val response = client.get("/restaurants/$postcode")
         assertEquals(HttpStatusCode.BadRequest, response.status)
-        assertEquals("Postcode must be between 5-7 characters", response.bodyAsText())
+        assertEquals("Postcode should be at least 5 characters", response.bodyAsText())
     }
     
     @ParameterizedTest
@@ -111,11 +111,12 @@ class ApplicationTest {
         }
         val response = client.get("/restaurants/$postcode")
         assertEquals(HttpStatusCode.BadRequest, response.status)
-        assertEquals("Postcode must be between 5-7 characters", response.bodyAsText())
+        assertEquals("Postcode should be at most 7 characters", response.bodyAsText())
     }
 
-    @Test
-    fun testNoRestaurantsReturned() = testApplication {
+    @ParameterizedTest
+    @ValueSource(strings = ["LLLLLL","LAA5R6"])
+    fun testWrongPostcodeFormat(postcode: String) = testApplication {
         application {
             configureRouting()
             configureSerialization()
@@ -126,14 +127,14 @@ class ApplicationTest {
                 json()
             }
         }
-        val response = client.get("/restaurants/LLLLLL")
-        assertEquals(HttpStatusCode.NotFound, response.status)
-        assertEquals("No restaurants found for postcode LLLLLL", response.bodyAsText())
+        val response = client.get("/restaurants/$postcode")
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("Enter a valid postcode", response.bodyAsText())
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["LL 57 4   BB"])
-    fun testBadPostcodeFormat(postcode: String)= testApplication {
+    fun testBadPostcodeSpaceFormat(postcode: String)= testApplication {
         application {
             configureRouting()
             configureSerialization()
