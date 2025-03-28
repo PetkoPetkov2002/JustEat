@@ -33,20 +33,21 @@ fun Application.configureRouting() {
         // Just Eat API endpoint
         get("/restaurants/{postcode}") {
             val postcode = call.parameters["postcode"]
-            
+
             if (postcode.isNullOrBlank()) {
                 call.respond(HttpStatusCode.BadRequest, "Postcode is required")
                 return@get
             }
+            val cleanedPostcode = postcode.replace("\\s".toRegex(), "")
             
             // Validate postcode length; postcodes must be between 5 and 7 characters long
-            if (postcode.length < 5 || postcode.length > 7) {
+            if (cleanedPostcode.length < 5 || cleanedPostcode.length > 7) {
                 call.respond(HttpStatusCode.BadRequest, "Postcode must be between 5-7 characters")
                 return@get
             }
             
             try {
-                val restaurants = justEatService.getRestaurantsByPostcode(postcode)
+                val restaurants = justEatService.getRestaurantsByPostcode(cleanedPostcode)
                 if (restaurants.isEmpty()) {
                     call.respond(HttpStatusCode.NotFound, "No restaurants found for postcode $postcode")
                 } else {

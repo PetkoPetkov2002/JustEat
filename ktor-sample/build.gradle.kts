@@ -18,6 +18,8 @@ repositories {
     mavenCentral()
 }
 
+val junitVersion = "5.8.2"
+
 dependencies {
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.server.core)
@@ -34,6 +36,22 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.6")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
     
+    // Use JUnit 5 (Jupiter) for testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    
+    // Make sure platform versions are aligned
+    testImplementation("org.junit.platform:junit-platform-commons:1.8.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.8.2")
+    
+    // Keep Ktor test host
     testImplementation(libs.ktor.server.test.host)
-    testImplementation(libs.kotlin.test.junit)
+    
+    // Keep kotlin.test for specific assertions
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.10")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

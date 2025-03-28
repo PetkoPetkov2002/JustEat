@@ -21,10 +21,7 @@ class JustEatService {
     }
 
     suspend fun getRestaurantsByPostcode(postcode: String): List<RestaurantInfo> {
-        // Remove spaces from postcode and convert to uppercase
-        val formattedPostcode = postcode.replace(" ", "").uppercase()
-        
-        val response: JustEatResponse = client.get("https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/$formattedPostcode") {
+        val response: JustEatResponse = client.get("https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/$postcode") {
             headers {
                 append("Accept", "application/json")
             }

@@ -8,9 +8,12 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
-import junit.framework.TestCase.assertFalse
 import kotlinx.serialization.json.Json
-import kotlin.test.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+import kotlin.test.assertIs
 
 class ApplicationTest {
 
@@ -69,15 +72,15 @@ class ApplicationTest {
             accept(ContentType.Application.Json)
         }
         //Retrieve the body and deserialize to RestaurantInfo
-        val model_response: List<RestaurantInfo> = response.body()
+        val responseTwo: List<RestaurantInfo> = response.body()
 
         // Verify it's an array of RestuarantInfo Objects
-       assertIs<List<RestaurantInfo>>(model_response)
-
+       assertIs<List<RestaurantInfo>>(responseTwo)
     }
 
-    @Test
-    fun testPostCodeLowerBoundary() = testApplication {
+    @ParameterizedTest
+    @ValueSource(strings = ["L","LL","LLL","LLLL"])
+    fun testPostCodeLowerBoundary(postcode: String) = testApplication {
         application {
             configureRouting()
             configureSerialization()
@@ -88,13 +91,14 @@ class ApplicationTest {
                 json()
             }
         }
-        val response = client.get("/restaurants/LL")
-        assertEquals(HttpStatusCode.BadRequest, response.status,message = "Postcode must be between 5-7 characters")
-
-
+        val response = client.get("/restaurants/$postcode")
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("Postcode must be between 5-7 characters", response.bodyAsText())
     }
-    @Test
-    fun testPostCodeUpperBoundary() = testApplication {
+    
+    @ParameterizedTest
+    @ValueSource(strings = ["LLLLLLLL","LLLLLLLLLLLLLLLL"])
+    fun testPostCodeUpperBoundary(postcode: String) = testApplication {
         application {
             configureRouting()
             configureSerialization()
@@ -105,8 +109,9 @@ class ApplicationTest {
                 json()
             }
         }
-        val response = client.get("/restaurants/LL574BBB")
-        assertEquals(HttpStatusCode.BadRequest, response.status,message = "Postcode must be between 5-7 characters")
+        val response = client.get("/restaurants/$postcode")
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("Postcode must be between 5-7 characters", response.bodyAsText())
     }
 
     @Test
@@ -122,7 +127,7 @@ class ApplicationTest {
             }
         }
         val response = client.get("/restaurants/LLLLLL")
-        assertEquals(HttpStatusCode.NotFound, response.status,message = "No restaurants found for postcode LLLLLL")
+        assertEquals(HttpStatusCode.NotFound, response.status)
+        assertEquals("No restaurants found for postcode LLLLLL", response.bodyAsText())
     }
-
 }
