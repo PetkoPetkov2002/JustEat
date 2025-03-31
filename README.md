@@ -153,3 +153,18 @@ npm run dev
 ```
 
 Save this as `start.sh`, make it executable with `chmod +x start.sh`, and run with `./start.sh`.
+
+## Assumptions
+- The application is intended for UK market only, given the postcode validation(As stated in the requirement document)
+- Frontend will be accessed through modern web browsers that support ES6+ features
+
+
+## Improvements
+
+- Add caching layer for frequently searched postcodes to reduce API calls
+- Implement error retry mechanism for failed API requests
+- Add unit tests for frontend components
+- Implement restaurant filtering by cuisine type and rating
+- Consider adding geolocation to auto-fill user's postcode
+- Add accessibility features (ARIA labels, keyboard navigation)
+- Implement request throttling to prevent API abuse
