@@ -10,8 +10,6 @@ import io.ktor.server.routing.*
 
 
 fun Application.configureRouting() {
-
-    
     val justEatService = JustEatService()
     val postcodeValidator = PostcodeValidator()
     
@@ -49,8 +47,5 @@ fun Application.configureRouting() {
                 }
             }
         }
-        
-        // Static plugin. Try to access `/static/index.html`
-        staticResources("/static", "static")
     }
 }

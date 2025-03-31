@@ -1,8 +1,9 @@
 package com.example.validation
 
 /**
- * Validator for UK postcodes
- * Handles validation of postcode format and length
+ * Validates UK postcodes based on general length and format rules.
+ * Note: Does not check against a database of valid postcodes, only format using a regular expression.
+ * Source: https://www.youtube.com/watch?v=NBL0igWs2YU
  */
 class PostcodeValidator {
     
@@ -11,6 +12,7 @@ class PostcodeValidator {
     
     /**
      * Result class for validation outcomes
+     * Use of sealed class ensure that when clause in Routing.kt check exhaustively for each case
      */
     sealed class ValidationResult {
         data object Valid : ValidationResult()
