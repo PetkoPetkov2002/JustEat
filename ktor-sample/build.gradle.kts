@@ -35,7 +35,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:2.3.6")
     implementation("io.ktor:ktor-client-cio:2.3.6")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
-    
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     // Use JUnit 5 (Jupiter) for testing
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")

@@ -1,5 +1,6 @@
 package com.example.service
 
+import CacheService
 import com.example.model.JustEatResponse
 import com.example.model.RestaurantInfo
 import io.ktor.client.*
@@ -7,9 +8,10 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.request.headers
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-
 class JustEatService {
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -19,8 +21,13 @@ class JustEatService {
             })
         }
     }
+    private val cacheService = CacheService()
 
     suspend fun getRestaurantsByPostcode(postcode: String): List<RestaurantInfo> {
+        val cachedRestaurants = cacheService.get(postcode)
+        if(cachedRestaurants != null) {
+            return cachedRestaurants
+        }
         val response: JustEatResponse = client.get("https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/$postcode") {
             headers {
                 append("Accept", "application/json")
@@ -28,7 +35,7 @@ class JustEatService {
         }.body()
 
         // Extract the first 10 restaurants or all if less than 10
-        return response.restaurants
+        val restaurants =  response.restaurants
             .take(10)
             .map { restaurant ->
                 RestaurantInfo(
@@ -38,5 +45,7 @@ class JustEatService {
                     address = "${restaurant.address.firstLine}, ${restaurant.address.city}, ${restaurant.address.postalCode}"
                 )
             }
+        cacheService.set(postcode, restaurants)
+        return restaurants
     }
 } 
