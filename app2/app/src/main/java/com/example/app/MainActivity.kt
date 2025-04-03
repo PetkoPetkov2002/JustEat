@@ -13,7 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -194,11 +197,33 @@ fun RestaurantItem(restaurant: RestaurantInfo) {
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = restaurant.address)
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Address: ")
+                    }
+                    append(restaurant.address)
+                }
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Rating: ${restaurant.cuisines}/5")
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Cuisines: ")
+                    }
+                    append(restaurant.cuisines.joinToString(", "))
+                }
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Rating: ${restaurant.rating}/5")
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Rating: ")
+                    }
+                }
+            )
+            Text(text = "${restaurant.rating}/5")
+
         }
     }
 }
