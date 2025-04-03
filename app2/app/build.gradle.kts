@@ -49,10 +49,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     // Add Gson for JSON parsing
     implementation("com.google.code.gson:gson:2.10.1")
-    
+    implementation(libs.firebase.crashlytics.buildtools)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

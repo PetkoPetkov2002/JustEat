@@ -1,5 +1,6 @@
 package com.example.app
 
+import android.net.http.HttpResponseCache.install
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -17,22 +18,54 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.app.ui.theme.AppTheme
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.HttpClient
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
 // Data class to hold restaurant information
-data class Restaurant(
-    val id: String,
+data class RestaurantInfo(
     val name: String,
-    val address: String,
-    val rating: Float
+    val cuisines: List<String>,
+    val rating: Double,
+    val address: String
 )
 
+interface UserService {
+
+    @GET("/restaurants")
+    suspend fun getUsers(
+        @Query("per_page") per_page: Int,
+        @Query("page") page: Int
+    ): List<RestaurantInfo>
+
+    @GET("/restaurants/{postcode}")
+    suspend fun getUser(@Path("postcode") postcode: String)
+}
+interface RestaurantApiService {
+    @GET("restaurants/{postcode}")
+    suspend fun getRestaurants(@Path("postcode") postcode: String): List<RestaurantInfo>
+}
+val retrofit: Retrofit = Retrofit.Builder()
+    .baseUrl("http://10.0.2.2:8080/")
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+val okHttpClient = OkHttpClient.Builder()
+    .build()
+
+
+
+val restaurantApiService = retrofit.create(RestaurantApiService::class.java)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +83,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RestaurantSearchScreen(modifier: Modifier = Modifier) {
     val searchQuery = remember { mutableStateOf("") }
-    val restaurants = remember { mutableStateListOf<Restaurant>() }
+    val restaurants = remember { mutableStateListOf<RestaurantInfo>() }
     val isLoading = remember { mutableStateOf(false) }
     val errorMessage = remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
@@ -143,7 +176,7 @@ fun RestaurantSearchScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun RestaurantItem(restaurant: Restaurant) {
+fun RestaurantItem(restaurant: RestaurantInfo) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -163,55 +196,22 @@ fun RestaurantItem(restaurant: Restaurant) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = restaurant.address)
             Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "Rating: ${restaurant.cuisines}/5")
+            Spacer(modifier = Modifier.height(4.dp))
             Text(text = "Rating: ${restaurant.rating}/5")
         }
     }
 }
 
 // Function to fetch restaurants from the API
-suspend fun fetchRestaurants(query: String): List<Restaurant> {
-    // Simulate network call on a background thread
-    return kotlin.runCatching {
-        val url = URL("http://10.0.2.2:8000/restaurants?query=$query")
-        val connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-        
-        try {
-            val responseCode = connection.responseCode
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                val reader = BufferedReader(InputStreamReader(connection.inputStream))
-                val response = StringBuilder()
-                var line: String?
-                while (reader.readLine().also { line = it } != null) {
-                    response.append(line)
-                }
-                reader.close()
-                
-                // Parse JSON response
-                val gson = Gson()
-                val restaurantType = object : TypeToken<List<Restaurant>>() {}.type
-                
-                try {
-                    // Attempt to parse the JSON response
-                    gson.fromJson<List<Restaurant>>(response.toString(), restaurantType)
-                } catch (e: Exception) {
-                    Log.e("RestaurantSearch", "Error parsing JSON: ${e.message}")
-                    // Return mock data if parsing fails
-                    listOf(
-                        Restaurant("1", "Italian Delight", "123 Main St", 4.5f),
-                        Restaurant("2", "Sushi Paradise", "456 Oak Ave", 4.7f),
-                        Restaurant("3", "Burger Joint", "789 Pine Rd", 4.2f)
-                    )
-                }
-            } else {
-                throw Exception("HTTP error code: $responseCode")
-            }
-        } finally {
-            connection.disconnect()
-        }
-    }.getOrElse { 
-        Log.e("RestaurantSearch", "Network error: ${it.message}")
-        throw it
+
+suspend fun fetchRestaurants(query: String): List<RestaurantInfo> {
+    return try {
+        Log.d("RestaurantSearch", "Fetching restaurants for: $query")
+        restaurantApiService.getRestaurants(query)
+    } catch (e: Exception) {
+        Log.e("RestaurantSearch", "Network error: ${e.message}", e)
+        throw e
     }
 }
 
