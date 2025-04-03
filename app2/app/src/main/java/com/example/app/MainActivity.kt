@@ -40,7 +40,7 @@ data class RestaurantInfo(
     val rating: Double,
     val address: String
 )
-
+data class ErrorResponse(val message: String)
 interface UserService {
 
     @GET("/restaurants")
@@ -209,6 +209,19 @@ suspend fun fetchRestaurants(query: String): List<RestaurantInfo> {
     return try {
         Log.d("RestaurantSearch", "Fetching restaurants for: $query")
         restaurantApiService.getRestaurants(query)
+    } catch (e: retrofit2.HttpException) {
+        // Extract error body for HTTP errors
+        val errorBody = e.response()?.errorBody()?.string()
+        Log.e("RestaurantSearch", "HTTP error: ${e.code()}, Body: $errorBody", e)
+
+        try {
+            // Try to parse as error message JSON
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            throw Exception(errorResponse.message)
+        } catch (jsonEx: Exception) {
+            // If parsing fails, just throw the original error message
+            throw Exception(errorBody ?: e.message())
+        }
     } catch (e: Exception) {
         Log.e("RestaurantSearch", "Network error: ${e.message}", e)
         throw e
