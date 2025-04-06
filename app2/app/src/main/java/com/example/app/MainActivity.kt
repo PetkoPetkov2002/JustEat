@@ -1,6 +1,5 @@
 package com.example.app
 
-import android.net.http.HttpResponseCache.install
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -13,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -20,49 +20,35 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
+import com.example.app.model.RestaurantInfo
 import com.example.app.ui.theme.AppTheme
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.HttpClient
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.app.data.repository.RestaurantRepository
+import com.example.app.model.ErrorResponse
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 
-// Data class to hold restaurant information
-data class RestaurantInfo(
-    val name: String,
-    val cuisines: List<String>,
-    val rating: Double,
-    val address: String
-)
+// Keep the model classes for backward compatibility
+// But remove duplicate API service since we'll use the one in Repository
 data class ErrorResponse(val message: String)
 
-interface RestaurantApiService {
-    @GET("restaurants/{postcode}")
-    suspend fun getRestaurants(@Path("postcode") postcode: String): List<RestaurantInfo>
-}
-val retrofit: Retrofit = Retrofit.Builder()
-    .baseUrl("http://10.0.2.2:8080/")
-    .addConverterFactory(GsonConverterFactory.create())
-    .build()
-
-val restaurantApiService: RestaurantApiService = retrofit.create(RestaurantApiService::class.java)
 class MainActivity : ComponentActivity() {
+    // Create repository instance
+    private lateinit var repository: RestaurantRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize repository
+        repository = RestaurantRepository(applicationContext)
+
         enableEdgeToEdge()
         setContent {
             AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RestaurantSearchScreen(modifier = Modifier.padding(innerPadding))
+                    RestaurantSearchScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        repository = repository
+                    )
                 }
             }
         }
@@ -70,7 +56,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun RestaurantSearchScreen(modifier: Modifier = Modifier) {
+fun RestaurantSearchScreen(
+    modifier: Modifier = Modifier,
+    repository: RestaurantRepository
+) {
     val searchQuery = remember { mutableStateOf("") }
     val restaurants = remember { mutableStateListOf<RestaurantInfo>() }
     val isLoading = remember { mutableStateOf(false) }
@@ -106,17 +95,18 @@ fun RestaurantSearchScreen(modifier: Modifier = Modifier) {
                     .weight(1f)
                     .padding(end = 8.dp)
             )
-            
+
             Button(
                 onClick = {
                     // Clear previous results and errors
                     errorMessage.value = null
                     isLoading.value = true
                     restaurants.clear()
-                    
+
                     coroutineScope.launch {
                         try {
-                            val fetchedRestaurants = fetchRestaurants(searchQuery.value)
+                            // Use repository instead of direct API call
+                            val fetchedRestaurants = repository.getRestaurants(searchQuery.value)
                             restaurants.addAll(fetchedRestaurants)
                         } catch (e: Exception) {
                             Log.e("RestaurantSearch", "Error fetching restaurants", e)
@@ -154,7 +144,7 @@ fun RestaurantSearchScreen(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            
+
             LazyColumn {
                 items(restaurants) { restaurant ->
                     RestaurantItem(restaurant = restaurant)
@@ -166,6 +156,7 @@ fun RestaurantSearchScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun RestaurantItem(restaurant: RestaurantInfo) {
+    // Keep your original RestaurantItem implementation unchanged
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -206,36 +197,10 @@ fun RestaurantItem(restaurant: RestaurantInfo) {
                     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                         append("Rating: ")
                     }
+                    append("${restaurant.rating}/5")
                 }
             )
-            Text(text = "${restaurant.rating}/5")
-
         }
-    }
-}
-
-// Function to fetch restaurants from the API
-
-suspend fun fetchRestaurants(query: String): List<RestaurantInfo> {
-    return try {
-        Log.d("RestaurantSearch", "Fetching restaurants for: $query")
-        restaurantApiService.getRestaurants(query)
-    } catch (e: retrofit2.HttpException) {
-        // Extract error body for HTTP errors
-        val errorBody = e.response()?.errorBody()?.string()
-        Log.e("RestaurantSearch", "HTTP error: ${e.code()}, Body: $errorBody", e)
-
-        try {
-            // Try to parse as error message JSON
-            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-            throw Exception(errorResponse.message)
-        } catch (jsonEx: Exception) {
-            // If parsing fails, just throw the original error message
-            throw Exception(errorBody ?: e.message())
-        }
-    } catch (e: Exception) {
-        Log.e("RestaurantSearch", "Network error: ${e.message}", e)
-        throw e
     }
 }
 
@@ -243,6 +208,7 @@ suspend fun fetchRestaurants(query: String): List<RestaurantInfo> {
 @Composable
 fun RestaurantSearchPreview() {
     AppTheme {
-        RestaurantSearchScreen()
+        // For preview purposes only
+        RestaurantSearchScreen(repository = RestaurantRepository(LocalContext.current))
     }
 }
