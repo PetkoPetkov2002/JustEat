@@ -44,17 +44,7 @@ data class RestaurantInfo(
     val address: String
 )
 data class ErrorResponse(val message: String)
-interface UserService {
 
-    @GET("/restaurants")
-    suspend fun getUsers(
-        @Query("per_page") per_page: Int,
-        @Query("page") page: Int
-    ): List<RestaurantInfo>
-
-    @GET("/restaurants/{postcode}")
-    suspend fun getUser(@Path("postcode") postcode: String)
-}
 interface RestaurantApiService {
     @GET("restaurants/{postcode}")
     suspend fun getRestaurants(@Path("postcode") postcode: String): List<RestaurantInfo>
@@ -63,12 +53,8 @@ val retrofit: Retrofit = Retrofit.Builder()
     .baseUrl("http://10.0.2.2:8080/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
-val okHttpClient = OkHttpClient.Builder()
-    .build()
 
-
-
-val restaurantApiService = retrofit.create(RestaurantApiService::class.java)
+val restaurantApiService: RestaurantApiService = retrofit.create(RestaurantApiService::class.java)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
