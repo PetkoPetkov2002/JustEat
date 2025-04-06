@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,22 +25,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.app.model.RestaurantInfo
 import com.example.app.ui.theme.AppTheme
 import com.example.app.data.repository.RestaurantRepository
-import com.example.app.model.ErrorResponse
+import com.example.app.viewmodel.RestaurantViewModel
 import kotlinx.coroutines.launch
 
-// Keep the model classes for backward compatibility
-// But remove duplicate API service since we'll use the one in Repository
-data class ErrorResponse(val message: String)
+// Remove duplicate ErrorResponse class
 
 class MainActivity : ComponentActivity() {
-    // Create repository instance
-    private lateinit var repository: RestaurantRepository
+    // Use viewModels() delegate to create and manage ViewModel
+    private val viewModel: RestaurantViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize repository
-        repository = RestaurantRepository(applicationContext)
 
         enableEdgeToEdge()
         setContent {
@@ -47,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     RestaurantSearchScreen(
                         modifier = Modifier.padding(innerPadding),
-                        repository = repository
+                        viewModel = viewModel  // Pass viewModel instead of repository
                     )
                 }
             }
@@ -58,13 +54,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RestaurantSearchScreen(
     modifier: Modifier = Modifier,
-    repository: RestaurantRepository
+    viewModel: RestaurantViewModel  // Accept viewModel instead of repository
 ) {
-    val searchQuery = remember { mutableStateOf("") }
-    val restaurants = remember { mutableStateListOf<RestaurantInfo>() }
-    val isLoading = remember { mutableStateOf(false) }
-    val errorMessage = remember { mutableStateOf<String?>(null) }
-    val coroutineScope = rememberCoroutineScope()
+    // Access ViewModel state
+    val searchQuery = viewModel.searchQuery
+    val restaurants = viewModel.restaurants
+    val isLoading = viewModel.isLoading
+    val errorMessage = viewModel.errorMessage
 
     Column(
         modifier = modifier
@@ -98,23 +94,8 @@ fun RestaurantSearchScreen(
 
             Button(
                 onClick = {
-                    // Clear previous results and errors
-                    errorMessage.value = null
-                    isLoading.value = true
-                    restaurants.clear()
-
-                    coroutineScope.launch {
-                        try {
-                            // Use repository instead of direct API call
-                            val fetchedRestaurants = repository.getRestaurants(searchQuery.value)
-                            restaurants.addAll(fetchedRestaurants)
-                        } catch (e: Exception) {
-                            Log.e("RestaurantSearch", "Error fetching restaurants", e)
-                            errorMessage.value = "Failed to fetch restaurants: ${e.message}"
-                        } finally {
-                            isLoading.value = false
-                        }
-                    }
+                    // Use viewModel function to search
+                    viewModel.searchRestaurants(searchQuery.value)
                 }
             ) {
                 Text("Search")
@@ -207,8 +188,13 @@ fun RestaurantItem(restaurant: RestaurantInfo) {
 @Preview(showBackground = true)
 @Composable
 fun RestaurantSearchPreview() {
+    // Preview cannot use real viewModel, so create one just for preview
+    val previewContext = LocalContext.current
+    val previewViewModel = remember { 
+        RestaurantViewModel(previewContext.applicationContext as android.app.Application)
+    }
+    
     AppTheme {
-        // For preview purposes only
-        RestaurantSearchScreen(repository = RestaurantRepository(LocalContext.current))
+        RestaurantSearchScreen(viewModel = previewViewModel)
     }
 }

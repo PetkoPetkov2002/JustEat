@@ -2,16 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.example.app"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.app"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -54,8 +55,12 @@ dependencies {
     // Add Gson for JSON parsing
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(libs.firebase.crashlytics.buildtools)
+    
+    // Room dependencies - complete set
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

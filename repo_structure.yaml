@@ -1,0 +1,343 @@
+  - path: /FrontEnd
+    type: directory
+    contents:
+    - path: /FrontEnd/frontend
+      type: directory
+      contents:
+      - path: /FrontEnd/frontend/index.html
+        type: file
+      - path: /FrontEnd/frontend/vite.config.js
+        type: file
+      - path: /FrontEnd/frontend/README.md
+        type: file
+      - path: /FrontEnd/frontend/public
+        type: directory
+        contents:
+        - path: /FrontEnd/frontend/public/vite.svg
+          type: file
+      - path: /FrontEnd/frontend/package-lock.json
+        type: file
+      - path: /FrontEnd/frontend/package.json
+        type: file
+      - path: /FrontEnd/frontend/eslint.config.js
+        type: file
+      - path: /FrontEnd/frontend/src
+        type: directory
+        contents:
+        - path: /FrontEnd/frontend/src/App.css
+          type: file
+        - path: /FrontEnd/frontend/src/index.css
+          type: file
+        - path: /FrontEnd/frontend/src/components
+          type: directory
+          contents:
+          - path: /FrontEnd/frontend/src/components/Restaurant.css
+            type: file
+          - path: /FrontEnd/frontend/src/components/SearchPage.jsx
+            type: file
+          - path: /FrontEnd/frontend/src/components/SearchPage.css
+            type: file
+          - path: /FrontEnd/frontend/src/components/Restaurant.jsx
+            type: file
+        - path: /FrontEnd/frontend/src/main.jsx
+          type: file
+        - path: /FrontEnd/frontend/src/App.jsx
+          type: file
+        - path: /FrontEnd/frontend/src/assets
+          type: directory
+          contents:
+          - path: /FrontEnd/frontend/src/assets/react.svg
+            type: file
+  - path: /app2
+    type: directory
+    contents:
+    - path: /app2/app
+      type: directory
+      contents:
+      - path: /app2/app/proguard-rules.pro
+        type: file
+      - path: /app2/app/build.gradle.kts
+        type: file
+      - path: /app2/app/src
+        type: directory
+        contents:
+        - path: /app2/app/src/androidTest
+          type: directory
+          contents:
+          - path: /app2/app/src/androidTest/java
+            type: directory
+            contents:
+            - path: /app2/app/src/androidTest/java/com
+              type: directory
+              contents:
+              - path: /app2/app/src/androidTest/java/com/example
+                type: directory
+                contents:
+                - path: /app2/app/src/androidTest/java/com/example/app
+                  type: directory
+                  contents:
+                  - path: /app2/app/src/androidTest/java/com/example/app/ExampleInstrumentedTest.kt
+                    type: file
+        - path: /app2/app/src/test
+          type: directory
+          contents:
+          - path: /app2/app/src/test/java
+            type: directory
+            contents:
+            - path: /app2/app/src/test/java/com
+              type: directory
+              contents:
+              - path: /app2/app/src/test/java/com/example
+                type: directory
+                contents:
+                - path: /app2/app/src/test/java/com/example/app
+                  type: directory
+                  contents:
+                  - path: /app2/app/src/test/java/com/example/app/ExampleUnitTest.kt
+                    type: file
+        - path: /app2/app/src/main
+          type: directory
+          contents:
+          - path: /app2/app/src/main/res
+            type: directory
+            contents:
+            - path: /app2/app/src/main/res/mipmap-mdpi
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/mipmap-mdpi/ic_launcher.webp
+                type: file
+              - path: /app2/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp
+                type: file
+            - path: /app2/app/src/main/res/mipmap-hdpi
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/mipmap-hdpi/ic_launcher.webp
+                type: file
+              - path: /app2/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp
+                type: file
+            - path: /app2/app/src/main/res/drawable
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/drawable/ic_launcher_foreground.xml
+                type: file
+              - path: /app2/app/src/main/res/drawable/ic_launcher_background.xml
+                type: file
+            - path: /app2/app/src/main/res/mipmap-xxxhdpi
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp
+                type: file
+              - path: /app2/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp
+                type: file
+            - path: /app2/app/src/main/res/mipmap-xxhdpi
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp
+                type: file
+              - path: /app2/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp
+                type: file
+            - path: /app2/app/src/main/res/values
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/values/colors.xml
+                type: file
+              - path: /app2/app/src/main/res/values/themes.xml
+                type: file
+              - path: /app2/app/src/main/res/values/strings.xml
+                type: file
+            - path: /app2/app/src/main/res/xml
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/xml/backup_rules.xml
+                type: file
+              - path: /app2/app/src/main/res/xml/data_extraction_rules.xml
+                type: file
+            - path: /app2/app/src/main/res/mipmap-xhdpi
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/mipmap-xhdpi/ic_launcher.webp
+                type: file
+              - path: /app2/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp
+                type: file
+            - path: /app2/app/src/main/res/mipmap-anydpi-v26
+              type: directory
+              contents:
+              - path: /app2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+                type: file
+              - path: /app2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+                type: file
+          - path: /app2/app/src/main/AndroidManifest.xml
+            type: file
+          - path: /app2/app/src/main/java
+            type: directory
+            contents:
+            - path: /app2/app/src/main/java/com
+              type: directory
+              contents:
+              - path: /app2/app/src/main/java/com/example
+                type: directory
+                contents:
+                - path: /app2/app/src/main/java/com/example/app
+                  type: directory
+                  contents:
+                  - path: /app2/app/src/main/java/com/example/app/viewmodel
+                    type: directory
+                    contents:
+                    - path: /app2/app/src/main/java/com/example/app/viewmodel/RestaurantViewModel.kt
+                      type: file
+                  - path: /app2/app/src/main/java/com/example/app/ui
+                    type: directory
+                    contents:
+                    - path: /app2/app/src/main/java/com/example/app/ui/theme
+                      type: directory
+                      contents:
+                      - path: /app2/app/src/main/java/com/example/app/ui/theme/Color.kt
+                        type: file
+                      - path: /app2/app/src/main/java/com/example/app/ui/theme/Theme.kt
+                        type: file
+                      - path: /app2/app/src/main/java/com/example/app/ui/theme/Type.kt
+                        type: file
+                  - path: /app2/app/src/main/java/com/example/app/MainActivity.kt
+                    type: file
+                  - path: /app2/app/src/main/java/com/example/app/model
+                    type: directory
+                    contents:
+                    - path: /app2/app/src/main/java/com/example/app/model/ErrorResponse.kt
+                      type: file
+                    - path: /app2/app/src/main/java/com/example/app/model/RestaurantInfo.kt
+                      type: file
+                  - path: /app2/app/src/main/java/com/example/app/api
+                    type: directory
+                    contents:
+                    - path: /app2/app/src/main/java/com/example/app/api/RestaurantApiService.kt
+                      type: file
+                  - path: /app2/app/src/main/java/com/example/app/data
+                    type: directory
+                    contents:
+                    - path: /app2/app/src/main/java/com/example/app/data/database
+                      type: directory
+                      contents:
+                      - path: /app2/app/src/main/java/com/example/app/data/database/AppDatabase.kt
+                        type: file
+                      - path: /app2/app/src/main/java/com/example/app/data/database/CacheDao.kt
+                        type: file
+                      - path: /app2/app/src/main/java/com/example/app/data/database/CachedRestaurantsEntry.kt
+                        type: file
+                    - path: /app2/app/src/main/java/com/example/app/data/repository
+                      type: directory
+                      contents:
+                      - path: /app2/app/src/main/java/com/example/app/data/repository/RestaurantRepository.kt
+                        type: file
+    - path: /app2/gradle
+      type: directory
+      contents:
+      - path: /app2/gradle/libs.versions.toml
+        type: file
+      - path: /app2/gradle/wrapper
+        type: directory
+        contents:
+        - path: /app2/gradle/wrapper/gradle-wrapper.jar
+          type: file
+        - path: /app2/gradle/wrapper/gradle-wrapper.properties
+          type: file
+    - path: /app2/gradlew
+      type: file
+    - path: /app2/build.gradle.kts
+      type: file
+    - path: /app2/settings.gradle.kts
+      type: file
+    - path: /app2/gradle.properties
+      type: file
+    - path: /app2/gradlew.bat
+      type: file
+  - path: /README.md
+    type: file
+  - path: /ktor-sample
+    type: directory
+    contents:
+    - path: /ktor-sample/Android Coding Assignment - Early Careers Mobile Engineering Program - (OpenAccess ).pdf
+      type: file
+    - path: /ktor-sample/README.md
+      type: file
+    - path: /ktor-sample/gradle
+      type: directory
+      contents:
+      - path: /ktor-sample/gradle/libs.versions.toml
+        type: file
+      - path: /ktor-sample/gradle/wrapper
+        type: directory
+        contents:
+        - path: /ktor-sample/gradle/wrapper/gradle-wrapper.jar
+          type: file
+        - path: /ktor-sample/gradle/wrapper/gradle-wrapper.properties
+          type: file
+    - path: /ktor-sample/gradlew
+      type: file
+    - path: /ktor-sample/build.gradle.kts
+      type: file
+    - path: /ktor-sample/settings.gradle.kts
+      type: file
+    - path: /ktor-sample/gradle.properties
+      type: file
+    - path: /ktor-sample/gradlew.bat
+      type: file
+    - path: /ktor-sample/src
+      type: directory
+      contents:
+      - path: /ktor-sample/src/test
+        type: directory
+        contents:
+        - path: /ktor-sample/src/test/kotlin
+          type: directory
+          contents:
+          - path: /ktor-sample/src/test/kotlin/ApplicationTest.kt
+            type: file
+      - path: /ktor-sample/src/main
+        type: directory
+        contents:
+        - path: /ktor-sample/src/main/resources
+          type: directory
+          contents:
+          - path: /ktor-sample/src/main/resources/logback.xml
+            type: file
+          - path: /ktor-sample/src/main/resources/static
+            type: directory
+            contents:
+            - path: /ktor-sample/src/main/resources/static/index.html
+              type: file
+          - path: /ktor-sample/src/main/resources/application.yaml
+            type: file
+        - path: /ktor-sample/src/main/kotlin
+          type: directory
+          contents:
+          - path: /ktor-sample/src/main/kotlin/Routing.kt
+            type: file
+          - path: /ktor-sample/src/main/kotlin/Application.kt
+            type: file
+          - path: /ktor-sample/src/main/kotlin/Serialization.kt
+            type: file
+          - path: /ktor-sample/src/main/kotlin/Monitoring.kt
+            type: file
+          - path: /ktor-sample/src/main/kotlin/com
+            type: directory
+            contents:
+            - path: /ktor-sample/src/main/kotlin/com/example
+              type: directory
+              contents:
+              - path: /ktor-sample/src/main/kotlin/com/example/model
+                type: directory
+                contents:
+                - path: /ktor-sample/src/main/kotlin/com/example/model/JustEatModel.kt
+                  type: file
+              - path: /ktor-sample/src/main/kotlin/com/example/service
+                type: directory
+                contents:
+                - path: /ktor-sample/src/main/kotlin/com/example/service/JustEatService.kt
+                  type: file
+                - path: /ktor-sample/src/main/kotlin/com/example/service/CacheService.kt
+                  type: file
+              - path: /ktor-sample/src/main/kotlin/com/example/validation
+                type: directory
+                contents:
+                - path: /ktor-sample/src/main/kotlin/com/example/validation/PostcodeValidator.kt
+                  type: file
