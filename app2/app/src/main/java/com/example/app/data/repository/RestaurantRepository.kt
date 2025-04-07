@@ -15,20 +15,32 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
+/**
+ * Repository class responsible for fetching restaurant data.
+ * It acts as a single source of truth for restaurant data, handling both
+ * network requests (via [RestaurantApiService]) and local caching (via [CacheDao]).
+ *
+ * @param context Application context, needed for initializing the database.
+ */
 class RestaurantRepository(private val context: Context) {
-    // Cache validity - 15 minutes
-    private val CACHE_DURATION_MS = 15 * 60 * 1000L
+    // Defines the maximum age for cached data before it's considered stale.
+    private val CACHE_DURATION_MS = 15 * 60 * 1000L // 15 minutes
     
-    // Base URL - consider moving to a config file in a real app
-    private val BASE_URL = "http://10.0.2.2:8080/" // Emulator
-    // private val BASE_URL = "http://192.168.1.X:8080/" // Physical device - replace X with your IP
+    // Base URL for the backend API.
+    // NOTE: 10.0.2.2 is the special alias for the host machine's localhost from the Android emulator.
+    // Use your machine's network IP if testing on a physical device connected to the same Wi-Fi.
+    private val BASE_URL = "http://10.0.2.2:8080/"
+    // private val BASE_URL = "http://192.168.1.X:8080/" // Example for physical device
 
-    // Get database instance using the singleton pattern
+    // Lazily initializes the DAO from the singleton AppDatabase instance.
     private val cacheDao = AppDatabase.getDatabase(context).cacheDao()
 
-    // Create API service directly
+    // Creates the Retrofit API service instance.
     private val apiService: RestaurantApiService = createApiService()
     
+    /**
+     * Creates and configures the Retrofit service instance.
+     */
     private fun createApiService(): RestaurantApiService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -37,8 +49,19 @@ class RestaurantRepository(private val context: Context) {
             .create(RestaurantApiService::class.java)
     }
 
+    // Gson instance for JSON serialization/deserialization of cache data.
     private val gson = Gson()
 
+    /**
+     * Fetches restaurants for the given postcode.
+     * Tries to retrieve from cache first. If cache is missing or stale,
+     * fetches from the network API, caches the result, and returns it.
+     * Handles potential network and HTTP errors.
+     *
+     * @param postcode The postcode to search for.
+     * @return A list of [RestaurantInfo].
+     * @throws Exception if fetching fails or an error occurs.
+     */
     suspend fun getRestaurants(postcode: String): List<RestaurantInfo> {
         Log.d("RestaurantRepository", "Fetching restaurants for $postcode")
         
@@ -97,6 +120,12 @@ class RestaurantRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Deserializes a JSON string into a list of [RestaurantInfo] objects.
+     *
+     * @param json The JSON string representing the list of restaurants.
+     * @return The deserialized list of [RestaurantInfo].
+     */
     private fun deserializeRestaurants(json: String): List<RestaurantInfo> {
         val type = object : TypeToken<List<RestaurantInfo>>() {}.type
         return gson.fromJson(json, type)

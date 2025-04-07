@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.ApplicationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2025-04-07T16:20:05" hostname="Petkos-MacBook-Pro.local" time="2.468">
+  <properties/>
+  <testcase name="testRestaurantEndpointOutputStructure()" classname="com.example.ApplicationTest" time="0.898"/>
+  <testcase name="testRoot()" classname="com.example.ApplicationTest" time="0.194"/>
+  <testcase name="[1] L" classname="com.example.ApplicationTest" time="0.012"/>
+  <testcase name="[2] LL" classname="com.example.ApplicationTest" time="0.005"/>
+  <testcase name="[3] LLL" classname="com.example.ApplicationTest" time="0.004"/>
+  <testcase name="[4] LLLL" classname="com.example.ApplicationTest" time="0.003"/>
+  <testcase name="testRestaurantEndpoint()" classname="com.example.ApplicationTest" time="0.848"/>
+  <testcase name="[1] LLLLLLLL" classname="com.example.ApplicationTest" time="0.006"/>
+  <testcase name="[2] LLLLLLLLLLLLLLLL" classname="com.example.ApplicationTest" time="0.004"/>
+  <testcase name="[1] LLLLLL" classname="com.example.ApplicationTest" time="0.005"/>
+  <testcase name="[2] LAA5R6" classname="com.example.ApplicationTest" time="0.004"/>
+  <testcase name="[1] LL 57 4   BB" classname="com.example.ApplicationTest" time="0.462"/>
+  <system-out><![CDATA[2025-04-07 17:20:05.473 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2025-04-07 17:20:05.497 [DefaultDispatcher-worker-2 @call-context#3] INFO  io.ktor.test - Application started in 0.027 seconds.
+2025-04-07 17:20:05.498 [DefaultDispatcher-worker-3 @coroutine#6] INFO  io.ktor.test - Responding at http://localhost:80
+2025-04-07 17:20:05.498 [DefaultDispatcher-worker-3 @coroutine#6] INFO  io.ktor.test - Responding at https://localhost:443
+2025-04-07 17:20:06.172 [DefaultDispatcher-worker-10 @call-context#32] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2025-04-07 17:20:06.177 [DefaultDispatcher-worker-10 @call-context#32] INFO  io.ktor.test - Application started in 0.005 seconds.
+2025-04-07 17:20:06.177 [DefaultDispatcher-worker-4 @coroutine#35] INFO  io.ktor.test - Responding at http://localhost:80
+2025-04-07 17:20:06.177 [DefaultDispatcher-worker-4 @coroutine#35] INFO  io.ktor.test - Responding at https://localhost:443
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

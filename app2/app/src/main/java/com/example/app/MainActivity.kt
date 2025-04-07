@@ -30,8 +30,12 @@ import kotlinx.coroutines.launch
 
 // Remove duplicate ErrorResponse class
 
+/**
+ * The main activity of the application, hosting the Jetpack Compose UI.
+ */
 class MainActivity : ComponentActivity() {
-    // Use viewModels() delegate to create and manage ViewModel
+    // Use the viewModels() delegate to lazily initialize the RestaurantViewModel.
+    // The ViewModel's lifecycle is tied to the Activity.
     private val viewModel: RestaurantViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +55,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * The main composable function for the restaurant search screen.
+ * It observes state from the ViewModel and displays the UI accordingly.
+ *
+ * @param modifier Modifier for layout customization.
+ * @param viewModel The instance of [RestaurantViewModel] providing the state.
+ */
 @Composable
 fun RestaurantSearchScreen(
     modifier: Modifier = Modifier,
@@ -135,6 +146,11 @@ fun RestaurantSearchScreen(
     }
 }
 
+/**
+ * Composable function to display a single restaurant's information in a Card.
+ *
+ * @param restaurant The [RestaurantInfo] object containing the data to display.
+ */
 @Composable
 fun RestaurantItem(restaurant: RestaurantInfo) {
     // Keep your original RestaurantItem implementation unchanged
@@ -185,6 +201,10 @@ fun RestaurantItem(restaurant: RestaurantInfo) {
     }
 }
 
+/**
+ * Preview function for the [RestaurantSearchScreen] composable.
+ * Provides sample data for UI development and testing in Android Studio.
+ */
 @Preview(showBackground = true)
 @Composable
 fun RestaurantSearchPreview() {
